@@ -1,1 +1,31 @@
+services:
+  hbbs:
+    container_name: hbbs
+    image: rustdesk/rustdesk-server:latest
+    environment:
+      - ALWAYS_USE_RELAY=Y
+    command: hbbs
+    ports:
+      - "${RUSTDESK_RELAY_PORT}:21115"
+      - "${RUSTDESK_NAT_PORT_TCP}:21116/tcp"
+      - "${RUSTDESK_NAT_PORT_UDP}:21116/udp"
+      - "${RUSTDESK_WEB_PORT}:21118"
+    volumes:
+      - rustdesk_data:/root
+    restart: unless-stopped
+    depends_on:
+      - hbbr
+
+  hbbr:
+    container_name: hbbr
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    ports:
+      - "${RUSTDESK_RELAY_SERVER_PORT}:21117"
+    volumes:
+      - rustdesk_data:/root
+    restart: unless-stopped
+
+volumes:
+  rustdesk_data:
 
